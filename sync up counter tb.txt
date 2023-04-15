@@ -1,0 +1,31 @@
+`timescale 1ns/1ps
+
+module sync_up_counter_tb(
+
+    );
+    reg clk,rst;
+        wire [3:0]count;
+        always #5 clk = ~clk;
+        sync_counter uut(rst,clk,count);
+        task initialise;
+        begin
+            clk = 0;
+            rst = 1;
+        end
+        endtask
+        task reset;
+        begin
+            @(negedge clk)
+            rst = 0;
+            @(negedge clk)
+            rst = 1;
+        end
+        endtask
+        initial begin
+            initialise;
+            reset;
+            reset;
+            #50;
+            #100 $finish;
+        end
+endmodule
